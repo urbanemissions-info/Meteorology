@@ -53,7 +53,7 @@ def categorize_wind_speed(speed):
         return '6-8'
     else:
         return '>8'
-# Choose colors for wind direction categories
+# Choose colors for wind speed categories
 colors_ws = {'<2': '#984807', '2-4': '#E46C0A', '4-6': '#F79646', '6-8': '#FCD5B5', '>8':'#D9D9D9'}
 
 def categorize_mixing_height(mixht):
@@ -67,7 +67,7 @@ def categorize_mixing_height(mixht):
         return '1K-2K'
     else:
         return '>2000'
-# Choose colors for wind direction categories
+# Choose colors for MIXHT categories
 colors_mixht = {'<100': '#403152', '100-500': '#604A7B', '500-1K': '#B3A2C7', '1K-2K': '#FFFF00', '>2000':'#4F6228'}
 
 
@@ -153,6 +153,8 @@ plt.savefig(os.getcwd()+'/docs/met_summary_4winddirection_pie.jpg', bbox_inches=
 # PLOTS - 5 Wind Speeds
 plt.figure()
 pivot_df = citymet_df.pivot_table(index='month', columns='ws_category', values='percentage_ws', fill_value=0)
+pivot_df = pivot_df[['<2', '2-4', '4-6', '6-8', '>8']] 
+
 ax = pivot_df.plot(kind='bar', stacked=True, color=[colors_ws[col] for col in pivot_df.columns])
 plt.title('Wind Direction Distribution in Each Month')
 plt.xlabel('Month')
@@ -174,6 +176,7 @@ plt.savefig(os.getcwd()+'/docs/met_summary_5windspeed_pie.jpg', bbox_inches='tig
 # PLOTS - 5 MIXHT
 plt.figure()
 pivot_df = citymet_df.pivot_table(index='month', columns='mixht_category', values='percentage_mixht', fill_value=0)
+pivot_df = pivot_df[['<100', '100-500', '500-1K', '1K-2K', '>2000']] 
 ax = pivot_df.plot(kind='bar', stacked=True, color=[colors_mixht[col] for col in pivot_df.columns])
 plt.title('Wind Direction Distribution in Each Month')
 plt.xlabel('Month')
@@ -196,6 +199,7 @@ plt.savefig(os.getcwd()+'/docs/met_summary_5mixht_pie.jpg', bbox_inches='tight')
 # PLOTS - 6 TEMP
 plt.figure()
 pivot_df = citymet_df.pivot_table(index='month', columns='tempc_category', values='percentage_tempc', fill_value=0)
+pivot_df = pivot_df[['<15', '15-20', '20-25', '25-30', '30-35', '>35']] 
 ax = pivot_df.plot(kind='bar', stacked=True, color=[colors_tempc[col] for col in pivot_df.columns])
 plt.title('Wind Direction Distribution in Each Month')
 plt.xlabel('Month')
