@@ -4,7 +4,12 @@ from datetime import timedelta
 import numpy as np
 import matplotlib.pyplot as plt
 
-citymet_df = pd.read_csv(os.getcwd()+'/data/lucknow.2018.houravg.csv')
+
+met_file = 'lucknow.2018.houravg.csv'
+city_name = met_file.split('.')[0]
+year = met_file.split('.')[1]
+
+citymet_df = pd.read_csv(os.getcwd()+'/data/'+met_file)
 citymet_df['year']  =2018
 citymet_df['datetime'] = pd.to_datetime(citymet_df[['year', 'month', 'day', 'hour']])
 #Convert GMT to IST
@@ -102,7 +107,7 @@ citymet_df['percentage_ws'] = (citymet_df.groupby(['month', 'ws_category'])['dat
 citymet_df['percentage_mixht'] = (citymet_df.groupby(['month', 'mixht_category'])['datetime'].transform('count') / citymet_df['total_hours']) * 100
 citymet_df['percentage_tempc'] = (citymet_df.groupby(['month', 'tempc_category'])['datetime'].transform('count') / citymet_df['total_hours']) * 100
 
-citymet_df.to_csv(os.getcwd()+'/data/lucknow.2018.houravg_processed.csv', index=False)
+citymet_df.to_csv(os.getcwd()+'/data/'+city_name+'.'+year+'.houravg_processed.csv', index=False)
 
 # PLOTS - 8 Wind Directions
 plt.figure()
@@ -116,7 +121,7 @@ plt.ylabel('Percentage of Hours')
 ax.legend(title='Wind Direction', bbox_to_anchor=(0.5, -0.3), loc='lower center', ncol=8)
 # Adjust figure layout for legend
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/met_summary_8winddirection_stacked.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_wd1_statsbymonth_'+year+'.jpg', bbox_inches='tight')
 
 # Create a pie chart for wind direction distribution over the entire year
 plt.figure()
@@ -125,7 +130,7 @@ yearly_distribution.plot(kind='pie', autopct='%1.1f%%',
                          colors=[colors_8[cat] for cat in yearly_distribution.index])
 plt.title('Wind Direction Distribution for the Year')
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/met_summary_8winddirection_pie.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_wd1_statsbyyear_'+year+'.jpg', bbox_inches='tight')
 
 
 # PLOTS - 4 Wind Directions
@@ -140,7 +145,7 @@ plt.ylabel('Percentage of Hours')
 ax.legend(title='Wind Direction', bbox_to_anchor=(0.5, -0.3), loc='lower center', ncol=4)
 # Adjust figure layout for legend
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/met_summary_4winddirection_stacked.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_wd2_statsbymonth_'+year+'.jpg', bbox_inches='tight')
 
 plt.figure()
 yearly_distribution = citymet_df['wd_category_4'].value_counts(normalize=True) * 100
@@ -148,7 +153,7 @@ yearly_distribution.plot(kind='pie', autopct='%1.1f%%',
                          colors=[colors_4[cat] for cat in yearly_distribution.index])
 plt.title('Wind Direction Distribution for the Year')
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/met_summary_4winddirection_pie.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_wd2_statsbyyear_'+year+'.jpg', bbox_inches='tight')
 
 # PLOTS - 5 Wind Speeds
 plt.figure()
@@ -156,14 +161,14 @@ pivot_df = citymet_df.pivot_table(index='month', columns='ws_category', values='
 pivot_df = pivot_df[['<2', '2-4', '4-6', '6-8', '>8']] 
 
 ax = pivot_df.plot(kind='bar', stacked=True, color=[colors_ws[col] for col in pivot_df.columns])
-plt.title('Wind Direction Distribution in Each Month')
+plt.title('Wind Speed Distribution in Each Month')
 plt.xlabel('Month')
 plt.xticks(rotation=0)  # Ensure month names are not rotated
 plt.ylabel('Percentage of Hours')
-ax.legend(title='Wind Direction', bbox_to_anchor=(0.5, -0.3), loc='lower center', ncol=8)
+ax.legend(title='Wind Speed', bbox_to_anchor=(0.5, -0.3), loc='lower center', ncol=8)
 # Adjust figure layout for legend
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/met_summary_5windspeed_stacked.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_ws_statsbymonth_'+year+'.jpg', bbox_inches='tight')
 
 plt.figure()
 yearly_distribution = citymet_df['ws_category'].value_counts(normalize=True) * 100
@@ -171,29 +176,30 @@ yearly_distribution.plot(kind='pie', autopct='%1.1f%%',
                          colors=[colors_ws[cat] for cat in yearly_distribution.index])
 plt.title('Wind Speed Distribution for the Year')
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/met_summary_5windspeed_pie.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_ws_statsbyyear_'+year+'.jpg', bbox_inches='tight')
+
 
 # PLOTS - 5 MIXHT
 plt.figure()
 pivot_df = citymet_df.pivot_table(index='month', columns='mixht_category', values='percentage_mixht', fill_value=0)
 pivot_df = pivot_df[['<100', '100-500', '500-1K', '1K-2K', '>2000']] 
 ax = pivot_df.plot(kind='bar', stacked=True, color=[colors_mixht[col] for col in pivot_df.columns])
-plt.title('Wind Direction Distribution in Each Month')
+plt.title('Mixing Height Distribution in Each Month')
 plt.xlabel('Month')
 plt.xticks(rotation=0)  # Ensure month names are not rotated
 plt.ylabel('Percentage of Hours')
-ax.legend(title='Wind Direction', bbox_to_anchor=(0.5, -0.3), loc='lower center', ncol=8)
+ax.legend(title='Mixing Height', bbox_to_anchor=(0.5, -0.3), loc='lower center', ncol=8)
 # Adjust figure layout for legend
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/met_summary_5mixht_stacked.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_mh_statsbymonth_'+year+'.jpg', bbox_inches='tight')
 
 plt.figure()
 yearly_distribution = citymet_df['mixht_category'].value_counts(normalize=True) * 100
 yearly_distribution.plot(kind='pie', autopct='%1.1f%%',
                          colors=[colors_mixht[cat] for cat in yearly_distribution.index])
-plt.title('Wind Direction Distribution for the Year')
+plt.title('Mixing Height Distribution for the Year')
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/met_summary_5mixht_pie.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_mh_statsbyyear_'+year+'.jpg', bbox_inches='tight')
 
 
 # PLOTS - 6 TEMP
@@ -201,20 +207,20 @@ plt.figure()
 pivot_df = citymet_df.pivot_table(index='month', columns='tempc_category', values='percentage_tempc', fill_value=0)
 pivot_df = pivot_df[['<15', '15-20', '20-25', '25-30', '30-35', '>35']] 
 ax = pivot_df.plot(kind='bar', stacked=True, color=[colors_tempc[col] for col in pivot_df.columns])
-plt.title('Wind Direction Distribution in Each Month')
+plt.title('Temperature Distribution in Each Month')
 plt.xlabel('Month')
 plt.xticks(rotation=0)  # Ensure month names are not rotated
 plt.ylabel('Percentage of Hours')
-ax.legend(title='Wind Direction', bbox_to_anchor=(0.5, -0.3), loc='lower center', ncol=8)
+ax.legend(title='Temperature', bbox_to_anchor=(0.5, -0.3), loc='lower center', ncol=8)
 # Adjust figure layout for legend
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/met_summary_6tempc_stacked.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_tc_statsbymonth_'+year+'.jpg', bbox_inches='tight')
 
 plt.figure()
 yearly_distribution = citymet_df['tempc_category'].value_counts(normalize=True) * 100
 yearly_distribution.plot(kind='pie', autopct='%1.1f%%',
                          colors=[colors_tempc[cat] for cat in yearly_distribution.index])
-plt.title('Wind Direction Distribution for the Year')
+plt.title('Temperature Distribution for the Year')
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/met_summary_6tempc_pie.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_tc_statsbyyear_'+year+'.jpg', bbox_inches='tight')
 
