@@ -10,11 +10,14 @@ city_name = met_file.split('.')[0]
 year = met_file.split('.')[1]
 
 citymet_df = pd.read_csv(os.getcwd()+'/data/'+met_file)
-citymet_df['year']  =2018
+citymet_df['year']  =year
 citymet_df['datetime'] = pd.to_datetime(citymet_df[['year', 'month', 'day', 'hour']])
 #Convert GMT to IST
 citymet_df['datetime'] = citymet_df['datetime'] + timedelta(hours=5, minutes=30)
 citymet_df['month'] = citymet_df['datetime'].dt.strftime('%b') # Convert month numbers to month names
+citymet_df['day'] = citymet_df['datetime'].dt.day
+citymet_df['hour'] = citymet_df['datetime'].dt.hour
+
 month_order = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 citymet_df['month'] = pd.Categorical(citymet_df['month'], categories=month_order, ordered=True)
 
