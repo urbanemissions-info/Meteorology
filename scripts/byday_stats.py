@@ -31,18 +31,19 @@ def q5(x):
 def q95(x):
     return x.quantile(0.95)
 
+#Calculate daily averages
+daily_averages = citymet_df.groupby(['month','day'])[['tempc', 'ws', 'mixht']].mean().reset_index()
+daily_averages_daytime = citymet_df[(citymet_df['hour'] >=7)&(citymet_df['hour'] <=18)].groupby(['month','day'])[['tempc', 'ws', 'mixht']].mean().reset_index()
+daily_averages_nighttime = citymet_df[(citymet_df['hour'] <=6)|(citymet_df['hour'] >=19)].groupby(['month','day'])[['tempc', 'ws', 'mixht']].mean().reset_index()
+
 # Calculate monthly average, 5th percentile, and 95th percentile
-monthly_stats = citymet_df.groupby('month').agg({'tempc':[q5, q95, 'mean'],
-                                                 'ws':[q5, q95, 'mean'],
-                                                 'mixht':[q5, q95, 'mean']}).reset_index()
+monthly_stats_daytime = daily_averages_daytime.groupby('month').agg({'tempc':[q5, q95, 'mean'],
+                                                                    'ws':[q5, q95, 'mean'],
+                                                                    'mixht':[q5, q95, 'mean']}).reset_index()
 
-monthly_stats_daytime = citymet_df[(citymet_df['hour'] >=7)&(citymet_df['hour'] <=18)].groupby('month').agg({'tempc':[q5, q95, 'mean'],
-                                                                                                    'ws':[q5, q95, 'mean'],
-                                                                                                    'mixht':[q5, q95, 'mean']}).reset_index()
-
-monthly_stats_nightime = citymet_df[(citymet_df['hour'] <=6)|(citymet_df['hour'] >=19)].groupby('month').agg({'tempc':[q5, q95, 'mean'],
-                                                                                                    'ws':[q5, q95, 'mean'],
-                                                                                                    'mixht':[q5, q95, 'mean']}).reset_index()
+monthly_stats_nightime = daily_averages_nighttime.groupby('month').agg({'tempc':[q5, q95, 'mean'],
+                                                                        'ws':[q5, q95, 'mean'],
+                                                                        'mixht':[q5, q95, 'mean']}).reset_index()
 
 
 for var in ['tempc', 'ws', 'mixht']:
@@ -61,7 +62,7 @@ for var in ['tempc', 'ws', 'mixht']:
     plt.xlabel('Month')
     plt.ylabel(var)
     plt.title('Variation in hourly '+var)
-    plt.xticks(monthly_stats[('month', '')])
+    plt.xticks(monthly_stats_daytime[('month', '')])
     plt.legend()
     plt.tight_layout()
     plt.savefig(os.getcwd()+'/docs/'+city_name+'_'+var+'_hourlyvariationbyyear_'+year+'.jpg', bbox_inches='tight')
