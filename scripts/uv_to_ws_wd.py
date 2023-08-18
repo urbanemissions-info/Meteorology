@@ -194,7 +194,7 @@ plt.ylabel('Percentage of Hours')
 ax.legend(title='Mixing Height', bbox_to_anchor=(0.5, -0.3), loc='lower center', ncol=8)
 # Adjust figure layout for legend
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/'+city_name+'_mh_statsbymonth_'+year+'.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_mixht_statsbymonth_'+year+'.jpg', bbox_inches='tight')
 
 plt.figure()
 yearly_distribution = citymet_df['mixht_category'].value_counts(normalize=True) * 100
@@ -202,7 +202,7 @@ yearly_distribution.plot(kind='pie', autopct='%1.1f%%',
                          colors=[colors_mixht[cat] for cat in yearly_distribution.index])
 plt.title('Mixing Height Distribution for the Year')
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/'+city_name+'_mh_statsbyyear_'+year+'.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_mixht_statsbyyear_'+year+'.jpg', bbox_inches='tight')
 
 
 # PLOTS - 6 TEMP
@@ -217,7 +217,7 @@ plt.ylabel('Percentage of Hours')
 ax.legend(title='Temperature', bbox_to_anchor=(0.5, -0.3), loc='lower center', ncol=8)
 # Adjust figure layout for legend
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/'+city_name+'_tc_statsbymonth_'+year+'.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_tempc_statsbymonth_'+year+'.jpg', bbox_inches='tight')
 
 plt.figure()
 yearly_distribution = citymet_df['tempc_category'].value_counts(normalize=True) * 100
@@ -225,5 +225,5 @@ yearly_distribution.plot(kind='pie', autopct='%1.1f%%',
                          colors=[colors_tempc[cat] for cat in yearly_distribution.index])
 plt.title('Temperature Distribution for the Year')
 plt.tight_layout()
-plt.savefig(os.getcwd()+'/docs/'+city_name+'_tc_statsbyyear_'+year+'.jpg', bbox_inches='tight')
+plt.savefig(os.getcwd()+'/docs/'+city_name+'_tempc_statsbyyear_'+year+'.jpg', bbox_inches='tight')
 

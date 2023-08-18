@@ -24,7 +24,7 @@ citymet_df['month'] = pd.Categorical(citymet_df['month'], categories=month_order
 # Calculate wind speed (ws)
 citymet_df['ws'] = np.sqrt(citymet_df['u10']**2 + citymet_df['v10']**2)
 
-# 50th Percentile
+# 5th Percentile
 def q5(x):
     return x.quantile(0.05)
 # 90th Percentile
