@@ -34,7 +34,7 @@ for var in ['tempc', 'ws', 'mixht']:
     # Calculate mean precipitation for each hour in each month
     hourly_means = citymet_df.groupby(['month', 'hour'])[var].mean().reset_index()
     
-    plt.figure()
+    plt.figure(figsize=(15,8))
     for idx, month in enumerate(months):
         monthly_data = hourly_means[hourly_means['month'] == month]
         if month in ['Jan', 'Feb', 'Mar', 'Oct', 'Nov', 'Dec']:
@@ -48,7 +48,7 @@ for var in ['tempc', 'ws', 'mixht']:
     plt.ylabel('Precipitation')
     plt.title('Hourly {} for Different Months'.format(var))
     plt.xticks(range(24))
-    plt.legend()
+    plt.legend(title='Months', bbox_to_anchor=(0.5, -0.4), loc='lower center', ncol=6)
     plt.grid(True)
     plt.tight_layout()
     plt.savefig(os.getcwd()+'/docs/'+city_name+'_'+var+'_diurnal_'+year+'.jpg', bbox_inches='tight')
